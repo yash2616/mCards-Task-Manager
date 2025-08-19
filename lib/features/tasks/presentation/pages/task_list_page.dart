@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task/features/tasks/domain/entities/priority_level.dart';
 
 import '../../domain/entities/task.dart';
-import '../widgets/progress_ring.dart';
 import '../../domain/services/priority_service.dart';
 import '../blocs/task_bloc.dart';
 import '../pages/add_edit_task_page.dart';
 import '../widgets/animated_task_tile.dart';
+import '../widgets/progress_ring.dart';
+
+enum PriorityFilter { all, low, medium, high, critical }
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -18,7 +19,7 @@ class TaskListPage extends StatefulWidget {
 
 class _TaskListPageState extends State<TaskListPage> {
   final _searchCtrl = TextEditingController();
-  PriorityLevel? _filter;
+  PriorityFilter _filter = PriorityFilter.all;
 
   @override
   void dispose() {
@@ -49,21 +50,18 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ),
         actions: [
-          PopupMenuButton<PriorityLevel?>(
+          PopupMenuButton<PriorityFilter>(
             icon: const Icon(Icons.filter_list),
-            initialValue: _filter,
             onSelected: (value) => setState(() => _filter = value),
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: null,
+                value: PriorityFilter.all,
                 child: Text('All Priorities'),
               ),
-              ...PriorityLevel.values.map(
-                (e) => PopupMenuItem(
-                  value: e,
-                  child: Text(e.name.capitalize()),
-                ),
-              ),
+              const PopupMenuItem(value: PriorityFilter.low, child: Text('Low')),
+              const PopupMenuItem(value: PriorityFilter.medium, child: Text('Med')),
+              const PopupMenuItem(value: PriorityFilter.high, child: Text('High')),
+              const PopupMenuItem(value: PriorityFilter.critical, child: Text('Critical')),
             ],
           ),
         ],
@@ -84,7 +82,7 @@ class _TaskListPageState extends State<TaskListPage> {
                     .toLowerCase()
                     .contains(_searchCtrl.text.toLowerCase());
             final level = PriorityService().getPriority(task);
-            final matchesFilter = _filter == null || level == _filter;
+            final matchesFilter = _filter == PriorityFilter.all || _filter.name == level.name;
             return matchesQuery && matchesFilter;
           }).toList();
 
@@ -127,8 +125,4 @@ class _TaskListPageState extends State<TaskListPage> {
       itemBuilder: (context, index) => AnimatedTaskTile(task: tasks[index]),
     );
   }
-}
-
-extension on String {
-  String capitalize() => isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
 }
