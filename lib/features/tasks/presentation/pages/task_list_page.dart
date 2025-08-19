@@ -6,6 +6,7 @@ import '../blocs/task_bloc.dart';
 import '../widgets/priority_indicator.dart';
 import '../../../../core/di/di.dart';
 import '../pages/add_edit_task_page.dart';
+import '../widgets/animated_task_tile.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -26,8 +27,6 @@ class _TaskListPageState extends State<TaskListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final priorityService = sl<PriorityService>();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Tasks'),
@@ -83,7 +82,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 (task.description ?? '')
                     .toLowerCase()
                     .contains(_searchCtrl.text.toLowerCase());
-            final level = priorityService.getPriority(task);
+            final level = PriorityService().getPriority(task);
             final matchesFilter = _filter == null || level == _filter;
             return matchesQuery && matchesFilter;
           }).toList();
@@ -96,15 +95,7 @@ class _TaskListPageState extends State<TaskListPage> {
             itemCount: tasks.length,
             separatorBuilder: (_, __) => const Divider(height: 0),
             itemBuilder: (context, index) {
-              final task = tasks[index];
-              final level = priorityService.getPriority(task);
-              return ListTile(
-                leading: PriorityIndicator(level: level),
-                title: Text(task.title),
-                subtitle: task.dueDate != null
-                    ? Text('Due: ${_formatDate(task.dueDate!)}')
-                    : null,
-              );
+              return AnimatedTaskTile(task: tasks[index]);
             },
           );
         },
