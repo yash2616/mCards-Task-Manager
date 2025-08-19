@@ -8,6 +8,7 @@ import '../blocs/task_cubit.dart';
 import '../blocs/task_state.dart';
 import '../widgets/priority_indicator.dart';
 import '../../../../core/di/di.dart';
+import '../pages/add_edit_task_page.dart';
 
 class TaskListPage extends StatelessWidget {
   const TaskListPage({super.key});
@@ -51,7 +52,10 @@ class TaskListPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to Task creation page.
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddEditTaskPage()),
+          );
         },
         child: const Icon(Icons.add),
       ),
