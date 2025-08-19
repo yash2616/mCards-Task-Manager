@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task/features/tasks/domain/entities/priority_level.dart';
 
 import '../../domain/services/priority_service.dart';
 import '../blocs/task_bloc.dart';
-import '../widgets/priority_indicator.dart';
-import '../../../../core/di/di.dart';
 import '../pages/add_edit_task_page.dart';
 import '../widgets/animated_task_tile.dart';
 
