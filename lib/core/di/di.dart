@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
 
+import 'package:task/core/database/database_helper.dart';
+import 'package:task/features/tasks/data/datasources/sync_queue_datasource.dart';
+import 'package:task/features/tasks/data/datasources/task_local_datasource.dart';
+import 'package:task/features/tasks/data/repositories/task_repository_impl.dart';
+import 'package:task/features/tasks/domain/repositories/task_repository.dart';
+
 /// Service locator singleton
 final sl = GetIt.instance;
 
@@ -9,9 +15,14 @@ final sl = GetIt.instance;
 /// tree is built. New registrations belong in the appropriate section to keep
 /// things tidy.
 Future<void> setupLocator() async {
-  // 🔧 Core & Utils ---------------------------------------------------------
-  // TODO: Register Logger, NetworkInfo, etc.
+  // 🔧 Core & External -------------------------------------------------------
+  sl.registerLazySingleton(() => DatabaseHelper.instance);
 
-  // 📦 External Packages ----------------------------------------------------
-  // Nothing yet – add database, preferences, and HTTP client here later.
+  // 🗄️ Datasources ----------------------------------------------------------
+  sl.registerLazySingleton(() => TaskLocalDataSource(sl()));
+  sl.registerLazySingleton(() => SyncQueueDataSource(sl()));
+
+  // 📦 Repositories ---------------------------------------------------------
+  sl.registerLazySingleton<TaskRepository>(
+      () => TaskRepositoryImpl(localDataSource: sl(), syncQueueDataSource: sl()));
 }
