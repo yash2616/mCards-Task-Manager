@@ -6,7 +6,8 @@ import 'package:task/features/tasks/data/datasources/task_local_datasource.dart'
 import 'package:task/features/tasks/data/repositories/task_repository_impl.dart';
 import 'package:task/features/tasks/domain/repositories/task_repository.dart';
 import 'package:task/features/tasks/domain/services/priority_service.dart';
-import 'package:task/features/tasks/presentation/task_cubit.dart';
+
+import '../../features/tasks/presentation/blocs/task_cubit.dart';
 
 /// Service locator singleton
 final sl = GetIt.instance;
