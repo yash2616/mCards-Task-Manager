@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static const _dbName = 'task_manager.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2;
 
   DatabaseHelper._internal();
   static final DatabaseHelper instance = DatabaseHelper._internal();
@@ -23,6 +23,7 @@ class DatabaseHelper {
       path,
       version: _dbVersion,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -47,5 +48,16 @@ CREATE TABLE sync_queue(
   payload TEXT,
   timestamp INTEGER
 )''');
+
+    // Indices for faster queries
+    await db.execute('CREATE INDEX idx_tasks_due_date ON tasks(due_date);');
+    await db.execute('CREATE INDEX idx_tasks_priority ON tasks(priority);');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_due_date ON tasks(due_date);');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority);');
+    }
   }
 }
