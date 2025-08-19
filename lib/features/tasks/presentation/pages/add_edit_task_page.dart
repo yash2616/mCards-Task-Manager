@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/task.dart';
 import '../../domain/services/priority_service.dart';
-import '../blocs/task_cubit.dart';
+import '../blocs/task_bloc.dart';
 import '../../../../core/di/di.dart';
 
 class AddEditTaskPage extends StatefulWidget {
@@ -98,7 +98,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       ),
       updatedAt: now,
     );
-    context.read<TaskCubit>().addTask(task, isOnline: true);
+    context.read<TaskBloc>().add(AddTaskEvent(task, isOnline: true));
     Navigator.pop(context);
   }
 

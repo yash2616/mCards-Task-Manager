@@ -7,7 +7,7 @@ import 'package:task/features/tasks/data/repositories/task_repository_impl.dart'
 import 'package:task/features/tasks/domain/repositories/task_repository.dart';
 import 'package:task/features/tasks/domain/services/priority_service.dart';
 
-import '../../features/tasks/presentation/blocs/task_cubit.dart';
+import '../../features/tasks/presentation/blocs/task_bloc.dart';
 
 /// Service locator singleton
 final sl = GetIt.instance;
@@ -33,5 +33,5 @@ Future<void> setupLocator() async {
   sl.registerLazySingleton(() => PriorityService());
 
   // 🧠 Blocs/Cubits ---------------------------------------------------------
-  sl.registerFactory(() => TaskCubit(sl()));
+  sl.registerFactory(() => TaskBloc(sl()));
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'core/di/di.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'features/tasks/presentation/blocs/task_cubit.dart';
+import 'features/tasks/presentation/blocs/task_bloc.dart';
 import 'features/tasks/presentation/pages/task_list_page.dart';
 
 Future<void> main() async {
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (_) => sl<TaskCubit>()..loadTasks(),
+        create: (_) => sl<TaskBloc>()..add(const LoadTasks()),
         child: const TaskListPage(),
       ),
     );

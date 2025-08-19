@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import '../../domain/entities/task.dart';
+part of 'task_bloc.dart';
 
 enum TaskStatus { initial, loading, success, failure }
 

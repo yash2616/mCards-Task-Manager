@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/services/priority_service.dart';
-import '../blocs/task_cubit.dart';
-import '../blocs/task_state.dart';
+import '../blocs/task_bloc.dart';
 import '../widgets/priority_indicator.dart';
 import '../../../../core/di/di.dart';
 import '../pages/add_edit_task_page.dart';
@@ -15,7 +14,7 @@ class TaskListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Your Tasks')),
-      body: BlocBuilder<TaskCubit, TaskState>(
+      body: BlocBuilder<TaskBloc, TaskState>(
         builder: (context, state) {
           switch (state.status) {
             case TaskStatus.loading:
