@@ -5,6 +5,7 @@ import 'package:task/features/tasks/data/datasources/sync_queue_datasource.dart'
 import 'package:task/features/tasks/data/datasources/task_local_datasource.dart';
 import 'package:task/features/tasks/data/repositories/task_repository_impl.dart';
 import 'package:task/features/tasks/domain/repositories/task_repository.dart';
+import 'package:task/features/tasks/domain/services/priority_service.dart';
 
 /// Service locator singleton
 final sl = GetIt.instance;
@@ -25,4 +26,7 @@ Future<void> setupLocator() async {
   // 📦 Repositories ---------------------------------------------------------
   sl.registerLazySingleton<TaskRepository>(
       () => TaskRepositoryImpl(localDataSource: sl(), syncQueueDataSource: sl()));
+
+  // 🎯 Services -------------------------------------------------------------
+  sl.registerLazySingleton(() => PriorityService());
 }
