@@ -52,6 +52,7 @@ class AnimatedTaskTile extends StatelessWidget {
         opacity: task.completed ? 0.5 : 1,
         child: ListTile(
           leading: PriorityIndicator(level: level),
+          minLeadingWidth: 70,
           title: Text(
             task.title,
             style: TextStyle(
