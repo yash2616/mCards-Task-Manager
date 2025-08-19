@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/features/tasks/domain/entities/priority_level.dart';
 
+import '../../domain/entities/task.dart';
+import '../widgets/progress_ring.dart';
 import '../../domain/services/priority_service.dart';
 import '../blocs/task_bloc.dart';
 import '../pages/add_edit_task_page.dart';
@@ -90,13 +92,20 @@ class _TaskListPageState extends State<TaskListPage> {
             return const Center(child: Text('No tasks match'));
           }
 
-          return ListView.separated(
-            itemCount: tasks.length,
-            separatorBuilder: (_, __) => const Divider(height: 0),
-            itemBuilder: (context, index) {
-              return AnimatedTaskTile(task: tasks[index]);
-            },
-          );
+          if (state.tasks.isNotEmpty) {
+            final completed = state.tasks.where((t) => t.completed).length;
+            final percent = completed / state.tasks.length;
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: ProgressRing(progress: percent),
+                ),
+                Expanded(child: _buildList(tasks)),
+              ],
+            );
+          }
+          return _buildList(tasks);
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -113,6 +122,14 @@ class _TaskListPageState extends State<TaskListPage> {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  Widget _buildList(List<Task> tasks) {
+    return ListView.separated(
+      itemCount: tasks.length,
+      separatorBuilder: (_, __) => const Divider(height: 0),
+      itemBuilder: (context, index) => AnimatedTaskTile(task: tasks[index]),
+    );
   }
 }
 

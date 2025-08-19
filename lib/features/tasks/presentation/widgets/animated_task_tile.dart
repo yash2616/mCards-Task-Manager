@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../tasks/domain/entities/task.dart';
 import '../blocs/task_bloc.dart';
-import '../blocs/task_event.dart';
 import '../../domain/services/priority_service.dart';
 import 'priority_indicator.dart';
 import '../../../../core/di/di.dart';
