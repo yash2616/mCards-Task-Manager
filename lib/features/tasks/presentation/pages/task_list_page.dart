@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/services/priority_service.dart';
-import '../../domain/entities/task.dart';
-import '../../domain/entities/priority_level.dart';
 import '../blocs/task_cubit.dart';
 import '../blocs/task_state.dart';
 import '../widgets/priority_indicator.dart';
@@ -45,8 +43,7 @@ class TaskListPage extends StatelessWidget {
                 },
               );
             case TaskStatus.initial:
-            default:
-              return const SizedBox.shrink();
+            return const SizedBox.shrink();
           }
         },
       ),

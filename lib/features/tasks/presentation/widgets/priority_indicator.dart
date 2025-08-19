@@ -15,8 +15,7 @@ class PriorityIndicator extends StatelessWidget {
       case PriorityLevel.medium:
         return Colors.amber;
       case PriorityLevel.low:
-      default:
-        return Colors.green;
+      return Colors.green;
     }
   }
 
@@ -29,8 +28,7 @@ class PriorityIndicator extends StatelessWidget {
       case PriorityLevel.medium:
         return 'Med';
       case PriorityLevel.low:
-      default:
-        return 'Low';
+      return 'Low';
     }
   }
 
@@ -39,7 +37,7 @@ class PriorityIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _color.withOpacity(0.15),
+        color: _color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
