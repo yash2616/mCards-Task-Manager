@@ -120,10 +120,6 @@ class _TaskListPageState extends State<TaskListPage> {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-
   Widget _buildList(List<Task> tasks) {
     return ListView.separated(
       itemCount: tasks.length,
