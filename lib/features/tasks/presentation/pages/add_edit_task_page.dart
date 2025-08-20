@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../domain/entities/task.dart';
-import '../../domain/services/priority_service.dart';
 import '../blocs/task_bloc.dart';
-import '../../../../core/di/di.dart';
 import '../../domain/enums/category.dart';
+import '../../domain/factories/task_factory.dart';
 
 class AddEditTaskPage extends StatefulWidget {
   const AddEditTaskPage({super.key});
@@ -89,25 +86,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   void _save() {
     if (!_formKey.currentState!.validate()) return;
-    final uuid = const Uuid().v4();
-    final now = DateTime.now();
-    final priorityService = sl<PriorityService>();
-    final task = Task(
-      id: uuid,
+    final task = TaskFactory.create(
       title: _titleCtrl.text,
       description: _descCtrl.text.isEmpty ? null : _descCtrl.text,
       category: _category,
       dueDate: _dueDate,
-      priority: priorityService.calculateScore(
-        Task(
-          id: uuid,
-          title: _titleCtrl.text,
-          description: _descCtrl.text,
-          dueDate: _dueDate,
-          updatedAt: now,
-        ),
-      ),
-      updatedAt: now,
     );
     context.read<TaskBloc>().add(AddTaskEvent(task, isOnline: true));
     Navigator.pop(context);
