@@ -10,6 +10,7 @@ import '../widgets/progress_ring.dart';
 import '../../domain/enums/priority_filter.dart';
 import '../../domain/enums/date_filter.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import 'dart:async';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -20,12 +21,14 @@ class TaskListPage extends StatefulWidget {
 
 class _TaskListPageState extends State<TaskListPage> {
   final _searchCtrl = TextEditingController();
+  Timer? _debounce;
   PriorityFilter _filter = PriorityFilter.all;
   DateFilter _dateFilter = DateFilter.all;
 
   @override
   void dispose() {
     _searchCtrl.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -42,7 +45,10 @@ class _TaskListPageState extends State<TaskListPage> {
               children: [
                 TextField(
                   controller: _searchCtrl,
-                  onChanged: (_) => setState(() {}),
+                  onChanged: (_) {
+                    _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 300), () => setState(() {}));
+                  },
                   decoration: InputDecoration(
                     hintText: 'Search tasks...',
                     prefixIcon: const Icon(Icons.search),
@@ -56,6 +62,17 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Clear filters',
+            icon: const Icon(Icons.filter_alt_off),
+            onPressed: () {
+              setState(() {
+                _filter = PriorityFilter.all;
+                _dateFilter = DateFilter.all;
+                _searchCtrl.clear();
+              });
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.brightness_6),
             onPressed: () => context.read<ThemeCubit>().toggle(),
