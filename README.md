@@ -33,6 +33,15 @@ flutter doctor # verify all check-marks
 ```
 
 ---
+## 🤔 Why BLoC and not Riverpod?
+The brief *prefers* Riverpod, but allows any robust state-management solution.  I chose **flutter_bloc** for two reasons:
+
+1. **Explicit event → state flow (Observer pattern).**  Reviewers can see every use-case mapped in `TaskBloc` without implicit Provider wiring.
+2. **BlocTest & replayable history.**  bloc_test gives deterministic unit tests (see `test/task_bloc_test.dart`), helping us reach the 70 % coverage target.
+
+Riverpod would work equally well; swapping later would only affect the presentation layer because the clean-architecture boundaries decouple state from domain/data.  This trade-off is documented in *docs/ARCHITECTURE.md*.
+
+---
 ## 🏗 Architecture Overview
 High-level layers:
 ```
