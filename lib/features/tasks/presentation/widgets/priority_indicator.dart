@@ -34,19 +34,28 @@ class PriorityIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       height: 40,
       width: 70,
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.15),
+        color: _color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        _label,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 12),
+      child: AnimatedDefaultTextStyle(
+        duration: const Duration(milliseconds: 300),
+        style: TextStyle(
+          color: _color,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
+        child: Text(
+          _label,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
