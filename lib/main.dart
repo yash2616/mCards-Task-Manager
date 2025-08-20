@@ -5,6 +5,7 @@ import 'features/tasks/presentation/blocs/task_bloc.dart';
 import 'features/tasks/presentation/pages/task_list_page.dart';
 import 'core/error/app_bloc_observer.dart';
 import 'core/error/error_handlers.dart';
+import 'core/theme/theme_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,15 +28,17 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<TaskBloc>()..add(const LoadTasks())),
+        BlocProvider(create: (_) => sl<ThemeCubit>()),
       ],
-      child: MaterialApp(
-        scaffoldMessengerKey: messengerKey,
-        title: 'Task Manager',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (_, mode) => MaterialApp(
+          scaffoldMessengerKey: messengerKey,
+          title: 'Task Manager',
+          themeMode: mode,
+          theme: ThemeData.light(useMaterial3: true),
+          darkTheme: ThemeData.dark(useMaterial3: true),
+          home: const TaskListPage(),
         ),
-        home: const TaskListPage(),
       ),
     );
   }

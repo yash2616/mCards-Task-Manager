@@ -8,6 +8,7 @@ import '../pages/add_edit_task_page.dart';
 import '../widgets/animated_task_tile.dart';
 import '../widgets/progress_ring.dart';
 import '../../domain/enums/priority_filter.dart';
+import '../../../../core/theme/theme_cubit.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -49,6 +50,10 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () => context.read<ThemeCubit>().toggle(),
+          ),
           PopupMenuButton<PriorityFilter>(
             icon: const Icon(Icons.filter_list),
             onSelected: (value) => setState(() => _filter = value),
