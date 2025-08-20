@@ -86,6 +86,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   void _save() {
     if (!_formKey.currentState!.validate()) return;
+    final existing = context.read<TaskBloc>().state.tasks;
+    if (existing.any((t) => t.title.toLowerCase().trim() == _titleCtrl.text.toLowerCase().trim())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Task with this title already exists')),
+      );
+      return;
+    }
     final task = TaskFactory.create(
       title: _titleCtrl.text,
       description: _descCtrl.text.isEmpty ? null : _descCtrl.text,
