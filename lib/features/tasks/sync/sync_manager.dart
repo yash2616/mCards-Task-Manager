@@ -8,10 +8,12 @@ import '../data/datasources/sync_queue_datasource.dart';
 class SyncManager {
   final SyncQueueDataSource _queue;
   late final StreamSubscription _sub;
-  SyncManager(this._queue);
+  final Stream<ConnectivityResult> _stream;
+  SyncManager(this._queue, [Stream<ConnectivityResult>? connectivityStream])
+      : _stream = connectivityStream ?? Connectivity().onConnectivityChanged;
 
   void init() {
-    _sub = Connectivity().onConnectivityChanged.listen((status) {
+    _sub = _stream.listen((status) {
       if (status != ConnectivityResult.none) {
         _flush();
       }
