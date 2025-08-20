@@ -1,7 +1,15 @@
 import 'package:task/features/tasks/domain/enums/priority_level.dart';
 import 'package:task/features/tasks/domain/entities/task.dart';
+import 'completion_learning_service.dart';
+import '../../../../core/di/di.dart';
 
 class PriorityService {
+  final CompletionLearningService learningService;
+  
+  PriorityService() : learningService = sl<CompletionLearningService>();
+
+  PriorityService.withLearning(this.learningService);
+
   /// Returns an integer score (higher = more urgent) based on due date proximity
   /// and completion history (future enhancement).
   int calculateScore(Task task) {
@@ -20,7 +28,11 @@ class PriorityService {
     if (difference == 0) return 80;
     if (difference <= 3) return 60;
     if (difference <= 7) return 40;
-    return 20;
+    var base = 20;
+
+    // apply multiplier based on historical lateness
+    base = (base * learningService.penaltyMultiplier).round();
+    return base;
   }
 
   PriorityLevel getPriority(Task task) {

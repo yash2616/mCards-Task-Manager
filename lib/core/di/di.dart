@@ -6,6 +6,7 @@ import 'package:task/features/tasks/data/datasources/task_local_datasource.dart'
 import 'package:task/features/tasks/data/repositories/task_repository_impl.dart';
 import 'package:task/features/tasks/domain/repositories/task_repository.dart';
 import 'package:task/features/tasks/domain/services/priority_service.dart';
+import 'package:task/features/tasks/domain/services/completion_learning_service.dart';
 import 'package:task/features/tasks/sync/sync_manager.dart';
 
 import '../../features/tasks/presentation/blocs/task_bloc.dart';
@@ -32,6 +33,9 @@ Future<void> setupLocator() async {
       () => TaskRepositoryImpl(localDataSource: sl(), syncQueueDataSource: sl()));
 
   // 🎯 Services -------------------------------------------------------------
+  final learning = CompletionLearningService();
+  await learning.init();
+  sl.registerSingleton(learning);
   sl.registerLazySingleton(() => PriorityService());
 
   // 🧠 Blocs/Cubits ---------------------------------------------------------

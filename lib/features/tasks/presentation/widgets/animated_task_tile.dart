@@ -5,6 +5,7 @@ import '../../../tasks/domain/entities/task.dart';
 import '../blocs/task_bloc.dart';
 import '../../domain/services/priority_service.dart';
 import 'priority_indicator.dart';
+import '../../domain/services/completion_learning_service.dart';
 import '../../../../core/di/di.dart';
 
 class AnimatedTaskTile extends StatelessWidget {
@@ -37,9 +38,8 @@ class AnimatedTaskTile extends StatelessWidget {
             completed: !task.completed,
             updatedAt: DateTime.now(),
           );
-          context
-              .read<TaskBloc>()
-              .add(UpdateTaskEvent(updated, isOnline: true));
+          sl<CompletionLearningService>().recordCompletion(dueDate: task.dueDate, completedAt: DateTime.now());
+          context.read<TaskBloc>().add(UpdateTaskEvent(updated, isOnline: true));
           return false; // don't remove
         } else {
           // Delete
@@ -75,9 +75,8 @@ class AnimatedTaskTile extends StatelessWidget {
               completed: !task.completed,
               updatedAt: DateTime.now(),
             );
-            context
-                .read<TaskBloc>()
-                .add(UpdateTaskEvent(updated, isOnline: true));
+            sl<CompletionLearningService>().recordCompletion(dueDate: task.dueDate, completedAt: DateTime.now());
+            context.read<TaskBloc>().add(UpdateTaskEvent(updated, isOnline: true));
           },
         ),
       ),
