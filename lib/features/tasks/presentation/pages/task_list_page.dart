@@ -77,30 +77,69 @@ class _TaskListPageState extends State<TaskListPage> {
             icon: const Icon(Icons.brightness_6),
             onPressed: () => context.read<ThemeCubit>().toggle(),
           ),
-          PopupMenuButton<DateFilter>(
-            icon: const Icon(Icons.event),
-            initialValue: _dateFilter,
-            onSelected: (value) => setState(() => _dateFilter = value),
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: DateFilter.all, child: Text('All Dates')),
-              PopupMenuItem(value: DateFilter.overdue, child: Text('Overdue')),
-              PopupMenuItem(value: DateFilter.today, child: Text('Today')),
-              PopupMenuItem(value: DateFilter.week, child: Text('This Week')),
+          // Date filter button with indicator
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              PopupMenuButton<DateFilter>(
+                icon: const Icon(Icons.event),
+                initialValue: _dateFilter,
+                onSelected: (value) => setState(() => _dateFilter = value),
+                itemBuilder: (context) => const [
+                  PopupMenuItem(value: DateFilter.all, child: Text('All Dates')),
+                  PopupMenuItem(value: DateFilter.overdue, child: Text('Overdue')),
+                  PopupMenuItem(value: DateFilter.today, child: Text('Today')),
+                  PopupMenuItem(value: DateFilter.week, child: Text('This Week')),
+                ],
+              ),
+              if (_dateFilter != DateFilter.all)
+                Positioned(
+                  right: 6,
+                  top: 6,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
             ],
           ),
-          PopupMenuButton<PriorityFilter>(
-            icon: const Icon(Icons.filter_list),
-            initialValue: _filter,
-            onSelected: (value) => setState(() => _filter = value),
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: PriorityFilter.all,
-                child: Text('All Priorities'),
+
+          // Priority filter button with indicator
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              PopupMenuButton<PriorityFilter>(
+                icon: const Icon(Icons.filter_list),
+                initialValue: _filter,
+                onSelected: (value) => setState(() => _filter = value),
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: PriorityFilter.all,
+                    child: Text('All Priorities'),
+                  ),
+                  const PopupMenuItem(value: PriorityFilter.low, child: Text('Low')),
+                  const PopupMenuItem(value: PriorityFilter.medium, child: Text('Med')),
+                  const PopupMenuItem(value: PriorityFilter.high, child: Text('High')),
+                  const PopupMenuItem(value: PriorityFilter.critical, child: Text('Critical')),
+                ],
               ),
-              const PopupMenuItem(value: PriorityFilter.low, child: Text('Low')),
-              const PopupMenuItem(value: PriorityFilter.medium, child: Text('Med')),
-              const PopupMenuItem(value: PriorityFilter.high, child: Text('High')),
-              const PopupMenuItem(value: PriorityFilter.critical, child: Text('Critical')),
+              if (_filter != PriorityFilter.all)
+                Positioned(
+                  right: 6,
+                  top: 6,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
             ],
           ),
         ],
@@ -149,7 +188,7 @@ class _TaskListPageState extends State<TaskListPage> {
           }).toList();
 
           if (tasks.isEmpty) {
-            return const Center(child: Text('No tasks match'));
+            return const Center(child: Text('No tasks found'));
           }
 
           if (state.tasks.isNotEmpty) {
