@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import '../../domain/entities/task.dart';
+import '../../domain/enums/category.dart';
 
 class TaskModel extends Task {
   const TaskModel({
     required super.id,
     required super.title,
     super.description,
-    super.category,
+    super.category = Category.others,
     super.dueDate,
     super.priority = 0,
     super.completed = false,
@@ -29,7 +30,9 @@ class TaskModel extends Task {
         id: map['id'] as String,
         title: map['title'] as String,
         description: map['description'] as String?,
-        category: map['category'] as String?,
+        category: Category.values.firstWhere(
+            (c) => c.name == (map['category'] as String? ?? 'others'),
+            orElse: () => Category.others),
         dueDate: map['due_date'] != null
             ? DateTime.fromMillisecondsSinceEpoch(map['due_date'] as int)
             : null,
@@ -43,7 +46,7 @@ class TaskModel extends Task {
         'id': id,
         'title': title,
         'description': description,
-        'category': category,
+        'category': category.name,
         'due_date': dueDate?.millisecondsSinceEpoch,
         'priority': priority,
         'completed': completed ? 1 : 0,

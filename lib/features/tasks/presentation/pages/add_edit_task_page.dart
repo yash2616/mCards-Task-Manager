@@ -6,6 +6,7 @@ import '../../domain/entities/task.dart';
 import '../../domain/services/priority_service.dart';
 import '../blocs/task_bloc.dart';
 import '../../../../core/di/di.dart';
+import '../../domain/enums/category.dart';
 
 class AddEditTaskPage extends StatefulWidget {
   const AddEditTaskPage({super.key});
@@ -19,6 +20,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
   final _titleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   DateTime? _dueDate;
+  Category _category = Category.others;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,14 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 controller: _descCtrl,
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
+              ),
+              DropdownButtonFormField<Category>(
+                value: _category,
+                decoration: const InputDecoration(labelText: 'Category'),
+                items: Category.values
+                    .map((c) => DropdownMenuItem(value: c, child: Text(c.name)))
+                    .toList(),
+                onChanged: (c) => setState(() => _category = c!),
               ),
               const SizedBox(height: 16),
               Row(
@@ -86,6 +96,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       id: uuid,
       title: _titleCtrl.text,
       description: _descCtrl.text.isEmpty ? null : _descCtrl.text,
+      category: _category,
       dueDate: _dueDate,
       priority: priorityService.calculateScore(
         Task(

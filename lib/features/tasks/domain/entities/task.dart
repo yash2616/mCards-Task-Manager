@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+import '../enums/category.dart';
 
 class Task extends Equatable {
   final String id;
   final String title;
   final String? description;
-  final String? category;
+  final Category category;
   final DateTime? dueDate;
   final int priority;
   final bool completed;
@@ -14,7 +15,7 @@ class Task extends Equatable {
     required this.id,
     required this.title,
     this.description,
-    this.category,
+    this.category = Category.others,
     this.dueDate,
     this.priority = 0,
     this.completed = false,
@@ -37,7 +38,7 @@ class Task extends Equatable {
     String? id,
     String? title,
     String? description,
-    String? category,
+    Category? category,
     DateTime? dueDate,
     int? priority,
     bool? completed,
