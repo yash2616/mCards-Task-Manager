@@ -8,6 +8,7 @@ import '../pages/add_edit_task_page.dart';
 import '../widgets/animated_task_tile.dart';
 import '../widgets/progress_ring.dart';
 import '../../domain/enums/priority_filter.dart';
+import '../../domain/enums/date_filter.dart';
 import '../../../../core/theme/theme_cubit.dart';
 
 class TaskListPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class TaskListPage extends StatefulWidget {
 class _TaskListPageState extends State<TaskListPage> {
   final _searchCtrl = TextEditingController();
   PriorityFilter _filter = PriorityFilter.all;
+  DateFilter _dateFilter = DateFilter.all;
 
   @override
   void dispose() {
@@ -36,16 +38,20 @@ class _TaskListPageState extends State<TaskListPage> {
           preferredSize: const Size.fromHeight(56),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              controller: _searchCtrl,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(
-                hintText: 'Search tasks...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchCtrl,
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    hintText: 'Search tasks...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -54,8 +60,20 @@ class _TaskListPageState extends State<TaskListPage> {
             icon: const Icon(Icons.brightness_6),
             onPressed: () => context.read<ThemeCubit>().toggle(),
           ),
+          PopupMenuButton<DateFilter>(
+            icon: const Icon(Icons.event),
+            initialValue: _dateFilter,
+            onSelected: (value) => setState(() => _dateFilter = value),
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: DateFilter.all, child: Text('All Dates')),
+              PopupMenuItem(value: DateFilter.overdue, child: Text('Overdue')),
+              PopupMenuItem(value: DateFilter.today, child: Text('Today')),
+              PopupMenuItem(value: DateFilter.week, child: Text('This Week')),
+            ],
+          ),
           PopupMenuButton<PriorityFilter>(
             icon: const Icon(Icons.filter_list),
+            initialValue: _filter,
             onSelected: (value) => setState(() => _filter = value),
             itemBuilder: (context) => [
               const PopupMenuItem(
@@ -86,8 +104,31 @@ class _TaskListPageState extends State<TaskListPage> {
                     .toLowerCase()
                     .contains(_searchCtrl.text.toLowerCase());
             final level = PriorityService().getPriority(task);
-            final matchesFilter = _filter == PriorityFilter.all || _filter.name == level.name;
-            return matchesQuery && matchesFilter;
+            final matchesPriority = _filter == PriorityFilter.all || _filter.name == level.name;
+
+            final now = DateTime.now();
+            bool matchesDate;
+            switch (_dateFilter) {
+              case DateFilter.all:
+                matchesDate = true;
+                break;
+              case DateFilter.overdue:
+                matchesDate = task.dueDate != null && task.dueDate!.isBefore(now);
+                break;
+              case DateFilter.today:
+                matchesDate = task.dueDate != null &&
+                    task.dueDate!.year == now.year &&
+                    task.dueDate!.month == now.month &&
+                    task.dueDate!.day == now.day;
+                break;
+              case DateFilter.week:
+                matchesDate = task.dueDate != null &&
+                    task.dueDate!.isAfter(now.subtract(Duration(days: now.weekday - 1))) &&
+                    task.dueDate!.isBefore(now.add(Duration(days: 7 - now.weekday)));
+                break;
+            }
+
+            return matchesQuery && matchesPriority && matchesDate;
           }).toList();
 
           if (tasks.isEmpty) {
