@@ -37,4 +37,42 @@ void main() {
     manager.dispose();
     await controller.close();
   });
+
+  test('handles duplicate IDs gracefully', () async {
+    final queue = _MockQueue();
+    final controller = StreamController<ConnectivityResult>();
+    final manager = SyncManager(queue, controller.stream)..init();
+
+    final ops = [
+      SyncOperationModel(id: 1, operation: SyncOperationType.update, taskId: '1', payload: '{}', timestamp: 0),
+      SyncOperationModel(id: 1, operation: SyncOperationType.update, taskId: '1', payload: '{}', timestamp: 0),
+    ];
+
+    when(() => queue.peekQueue()).thenAnswer((_) async => ops);
+    when(() => queue.removeById(1)).thenAnswer((_) async {});
+
+    controller.add(ConnectivityResult.mobile);
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    verify(() => queue.removeById(1)).called(2);
+    manager.dispose();
+    await controller.close();
+  });
+
+  test('delete op for missing task still removed from queue', () async {
+    final queue = _MockQueue();
+    final controller = StreamController<ConnectivityResult>();
+    final manager = SyncManager(queue, controller.stream)..init();
+
+    final op = SyncOperationModel(id: 2, operation: SyncOperationType.delete, taskId: 'missing', payload: '', timestamp: 0);
+    when(() => queue.peekQueue()).thenAnswer((_) async => [op]);
+    when(() => queue.removeById(2)).thenAnswer((_) async {});
+
+    controller.add(ConnectivityResult.wifi);
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    verify(() => queue.removeById(2)).called(1);
+    manager.dispose();
+    await controller.close();
+  });
 }
