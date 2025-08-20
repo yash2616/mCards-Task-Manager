@@ -7,8 +7,7 @@ import '../blocs/task_bloc.dart';
 import '../pages/add_edit_task_page.dart';
 import '../widgets/animated_task_tile.dart';
 import '../widgets/progress_ring.dart';
-
-enum PriorityFilter { all, low, medium, high, critical }
+import '../../domain/enums/priority_filter.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});

@@ -4,6 +4,7 @@ import '../datasources/task_local_datasource.dart';
 import '../datasources/sync_queue_datasource.dart';
 import '../models/task_model.dart';
 import '../models/sync_operation_model.dart';
+import '../../domain/enums/sync_operation_type.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final TaskLocalDataSource localDataSource;

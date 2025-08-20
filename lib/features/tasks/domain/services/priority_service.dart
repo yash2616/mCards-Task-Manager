@@ -1,4 +1,4 @@
-import 'package:task/features/tasks/domain/entities/priority_level.dart';
+import 'package:task/features/tasks/domain/enums/priority_level.dart';
 import 'package:task/features/tasks/domain/entities/task.dart';
 
 class PriorityService {

@@ -38,7 +38,7 @@ Future<void> setupLocator() async {
 
   // 🔄 Sync Manager ---------------------------------------------------------
   sl.registerLazySingleton(() {
-    final manager = SyncManager(sl(), sl());
+    final manager = SyncManager(sl());
     manager.init();
     return manager;
   });

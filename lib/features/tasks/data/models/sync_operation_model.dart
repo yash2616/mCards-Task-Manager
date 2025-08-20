@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-enum SyncOperationType { create, update, delete }
+import '../../domain/enums/sync_operation_type.dart';
 
 class SyncOperationModel {
   final int? id;

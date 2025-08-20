@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/priority_level.dart';
+import '../../domain/enums/priority_level.dart';
 
 class PriorityIndicator extends StatelessWidget {
   final PriorityLevel level;

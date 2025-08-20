@@ -1,16 +1,14 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:task/features/tasks/domain/enums/sync_operation_type.dart';
 
 import '../data/datasources/sync_queue_datasource.dart';
-import '../data/models/sync_operation_model.dart';
-import '../data/datasources/task_local_datasource.dart';
 
 class SyncManager {
   final SyncQueueDataSource _queue;
-  final TaskLocalDataSource _local;
   late final StreamSubscription _sub;
-  SyncManager(this._queue, this._local);
+  SyncManager(this._queue);
 
   void init() {
     _sub = Connectivity().onConnectivityChanged.listen((status) {
