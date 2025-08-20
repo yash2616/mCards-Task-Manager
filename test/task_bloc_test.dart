@@ -7,6 +7,12 @@ import 'package:task/features/tasks/presentation/blocs/task_bloc.dart';
 
 class MockTaskRepository extends Mock implements TaskRepository {}
 
+class _FakeTask extends Fake implements Task {}
+
+void registerFallbacks() {
+  registerFallbackValue(_FakeTask());
+}
+
 void main() {
   late MockTaskRepository repository;
   late TaskBloc bloc;
@@ -14,6 +20,7 @@ void main() {
   setUp(() {
     repository = MockTaskRepository();
     bloc = TaskBloc(repository);
+    registerFallbacks();
   });
 
   final sampleTask = Task(
@@ -32,6 +39,35 @@ void main() {
     expect: () => [
       const TaskState(status: TaskStatus.loading),
       TaskState(status: TaskStatus.success, tasks: [sampleTask]),
+    ],
+  );
+
+  blocTest<TaskBloc, TaskState>(
+    'emits success list after AddTaskEvent',
+    build: () {
+      when(() => repository.addTask(any(), isOnline: any(named: 'isOnline'))) .thenAnswer((_) async {});
+      when(() => repository.getAllTasks()).thenAnswer((_) async => [sampleTask]);
+      return bloc;
+    },
+    act: (bloc) => bloc.add(AddTaskEvent(sampleTask, isOnline: true)),
+    expect: () => [
+      // load triggered internally
+      const TaskState(status: TaskStatus.loading),
+      TaskState(status: TaskStatus.success, tasks: [sampleTask]),
+    ],
+  );
+
+  blocTest<TaskBloc, TaskState>(
+    'emits success list after DeleteTaskEvent',
+    build: () {
+      when(() => repository.deleteTask(any(), isOnline: any(named: 'isOnline'))) .thenAnswer((_) async {});
+      when(() => repository.getAllTasks()).thenAnswer((_) async => []);
+      return bloc;
+    },
+    act: (bloc) => bloc.add(DeleteTaskEvent('42', isOnline: true)),
+    expect: () => [
+      const TaskState(status: TaskStatus.loading),
+      const TaskState(status: TaskStatus.success, tasks: []),
     ],
   );
 }
