@@ -8,6 +8,7 @@ import 'package:task/features/tasks/domain/entities/task.dart';
 import 'package:task/features/tasks/domain/enums/category.dart';
 import 'package:task/features/tasks/domain/enums/sync_operation_type.dart';
 import 'package:task/features/tasks/data/models/sync_operation_model.dart';
+import 'package:task/features/tasks/data/models/task_model.dart';
 
 class _MockLocal extends Mock implements TaskLocalDataSource {}
 class _MockQueue extends Mock implements SyncQueueDataSource {}
@@ -27,6 +28,16 @@ void main() {
     local = _MockLocal();
     queue = _MockQueue();
     repo = TaskRepositoryImpl(localDataSource: local, syncQueueDataSource: queue);
+  });
+
+  setUpAll(() {
+    registerFallbackValue(TaskModel.fromEntity(sampleTask));
+    registerFallbackValue(SyncOperationModel(
+      operation: SyncOperationType.create,
+      taskId: 'dummy',
+      payload: '{}',
+      timestamp: 0,
+    ));
   });
 
   group('addTask', () {

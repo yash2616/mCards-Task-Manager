@@ -1,9 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:get_it/get_it.dart';
 import 'package:task/features/tasks/domain/services/priority_service.dart';
+import 'package:task/features/tasks/domain/services/completion_learning_service.dart';
 import 'package:task/features/tasks/domain/entities/task.dart';
 import 'package:task/features/tasks/domain/enums/priority_level.dart';
 
+class _MockLearning extends Mock implements CompletionLearningService {}
+
 void main() {
+  final sl = GetIt.instance;
+  sl.reset();
+  final mockLearning = _MockLearning();
+  when(() => mockLearning.penaltyMultiplier).thenReturn(1.0);
+  sl.registerSingleton<CompletionLearningService>(mockLearning);
   final service = PriorityService();
   group('PriorityService', () {
     test('returns critical for overdue tasks', () {

@@ -5,7 +5,7 @@ import '../../../../core/di/di.dart';
 
 class PriorityService {
   final CompletionLearningService learningService;
-  
+
   PriorityService() : learningService = sl<CompletionLearningService>();
 
   PriorityService.withLearning(this.learningService);
