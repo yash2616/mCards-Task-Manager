@@ -12,37 +12,25 @@ import 'package:task/features/tasks/sync/sync_manager.dart';
 import '../../features/tasks/presentation/blocs/task_bloc.dart';
 import '../theme/theme_cubit.dart';
 
-/// Service locator singleton
 final sl = GetIt.instance;
 
-/// Sets up the dependencies for the application.
-///
-/// This should be called **once** at application startup before the widget
-/// tree is built. New registrations belong in the appropriate section to keep
-/// things tidy.
 Future<void> setupLocator() async {
-  // 🔧 Core & External -------------------------------------------------------
   sl.registerLazySingleton(() => DatabaseHelper.instance);
 
-  // 🗄️ Datasources ----------------------------------------------------------
   sl.registerLazySingleton(() => TaskLocalDataSource(sl()));
   sl.registerLazySingleton(() => SyncQueueDataSource(sl()));
 
-  // 📦 Repositories ---------------------------------------------------------
   sl.registerLazySingleton<TaskRepository>(
       () => TaskRepositoryImpl(localDataSource: sl(), syncQueueDataSource: sl()));
 
-  // 🎯 Services -------------------------------------------------------------
   final learning = CompletionLearningService();
   await learning.init();
   sl.registerSingleton(learning);
   sl.registerLazySingleton(() => PriorityService());
 
-  // 🧠 Blocs/Cubits ---------------------------------------------------------
   sl.registerFactory(() => TaskBloc(sl()));
   sl.registerLazySingleton(() => ThemeCubit());
 
-  // 🔄 Sync Manager ---------------------------------------------------------
   sl.registerLazySingleton(() {
     final manager = SyncManager(sl());
     manager.init();
