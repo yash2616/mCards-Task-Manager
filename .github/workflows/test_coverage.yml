@@ -49,3 +49,4 @@ jobs:
             echo "::error::Test coverage ($COVERAGE%) is below the minimum required 70%"
             exit 1
           fi
+
