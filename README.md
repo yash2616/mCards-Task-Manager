@@ -11,7 +11,7 @@ A cross-platform Flutter application that demonstrates a Clean-Architecture appr
 
 ---
 ## 🧰 Tech Stack
-• **Flutter 3.6** + **Dart 3.6**  
+• **Flutter 3.27** + **Dart 3.6**  
 • **BLoC** for state management  
 • **GetIt** Dependency Injection  
 • **Sqflite** for local persistence  
@@ -19,8 +19,8 @@ A cross-platform Flutter application that demonstrates a Clean-Architecture appr
 
 ---
 ## 🔑 Prerequisites
-1. **Flutter SDK** >= 3.6 (stable channel)
-2. **Dart** ships with Flutter (no extra install)
+1. **Flutter SDK** >= 3.27 (stable channel)
+2. **Dart** 3.6.x (ships with Flutter)
 3. Xcode / Android Studio or any IDE with Flutter integration
 4. An Android emulator or iOS simulator for integration tests
 
