@@ -1,95 +1,77 @@
-# Personal Task Manager 📱
+# Task Manager
 
-A Flutter application demonstrating clean architecture, offline-first data, smart task prioritisation and adaptive UI.
-
----
-## 🚀 Features
-1. **Smart Task Management**
-   * Create / edit / delete tasks with category & due-date
-   * Heuristic priority score → colour-coded indicator
-   * Search bar + priority/date/category filters
-2. **Offline-First**
-   * Local persistence with Sqflite
-   * Sync queue stored in SQLite – flushed when connectivity returns (last-write-wins)
-3. **Adaptive UI**
-   * Responsive list, light/dark themes, custom `PriorityIndicator` & `ProgressRing`
-   * Micro-interaction animations (dismiss, completion ripple, priority colour tween)
-4. **Quality Code**
-   * Clean Architecture + BLoC state management
-   * DI via GetIt
-   * Unit-test coverage >70 % and integration test of core flow
+A cross-platform Flutter application that demonstrates a Clean-Architecture approach to personal task tracking: offline-first data, smart priority scoring, and an adaptive UI.
 
 ---
-## 🛠 Prerequisites
-* **Flutter SDK** 3.6.2 (stable channel) – [`flutter --version`] should report 3.6.x
-* **Dart** 3.6.x (ships with Flutter)
-* Android Studio / Xcode / VSCode with Flutter extension for emulator or device deployment
-* For integration tests: Android emulator or iOS Simulator running API 33+ / iOS 15+
+## ✨ Features
+• Create / edit / delete tasks with category & due-date.  
+• Heuristic priority score with colour-coded indicator.  
+• Search bar plus priority/date filters.  
+• Offline-first SQLite storage with background sync when connectivity returns.
 
-Ensure Flutter is set-up:
+---
+## 🧰 Tech Stack
+• **Flutter 3.27** + **Dart 3.6**  
+• **BLoC** for state management  
+• **GetIt** Dependency Injection  
+• **Sqflite** for local persistence  
+• Unit & integration tests (≥ 70 % coverage)
 
+---
+## 🔑 Prerequisites
+1. **Flutter SDK** >= 3.27 (stable channel)
+2. **Dart** 3.6.x (ships with Flutter)
+3. Xcode / Android Studio or any IDE with Flutter integration
+4. An Android emulator or iOS simulator for integration tests
+
+Verify your environment:
 ```bash
-flutter doctor # verify all check-marks
+flutter doctor  # all check-marks should be green
 ```
 
 ---
-## 🤔 Why BLoC and not Riverpod?
-The brief *prefers* Riverpod, but allows any robust state-management solution.  I chose **flutter_bloc** for two reasons:
-
-1. **Explicit event → state flow (Observer pattern).**  Reviewers can see every use-case mapped in `TaskBloc` without implicit Provider wiring.
-2. **BlocTest & replayable history.**  bloc_test gives deterministic unit tests (see `test/task_bloc_test.dart`), helping us reach the 70 % coverage target.
-
-Riverpod would work equally well; swapping later would only affect the presentation layer because the clean-architecture boundaries decouple state from domain/data.  This trade-off is documented in *docs/ARCHITECTURE.md*.
-
----
-## 🏗 Architecture Overview
-High-level layers:
-```
-lib/
-  ├─ core/        # DI, theme, db, error handling
-  ├─ features/
-  │   └─ tasks/
-  │       ├─ domain/      # enums, entities, factories, repositories
-  │       ├─ data/        # sqflite datasources & models
-  │       ├─ presentation # blocs, pages, widgets
-  │       └─ sync/        # SyncManager
-```
-More details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
----
-## 🔧 Setup
+## 🚀 Getting Started
 ```bash
-# 1. Clone repo
-git clone <repo> && cd task
+# 1. Clone repository
+$ git clone https://github.com/<your-org>/task.git
+$ cd task
 
-# 2. Fetch packages
-flutter pub get
+# 2. Install packages
+$ flutter pub get
 
-# 3. Generate native platform code (if running on macOS/windows/linux)
-flutter gen-l10n  # only needed if you have localisation, here safe to skip
+# 3. Run the app (pick a device or emulator)
+$ flutter run   # or flutter run -d <deviceId>
+```
 
-# 4. Run app
-flutter run        # choose device from prompt or pass -d <deviceId>
-
-# 5. Run unit tests with coverage
+---
+## ✅ Running Tests & Coverage
+```bash
+# Unit tests with coverage
 flutter test --coverage
 
-# 6. Run integration tests (emulator/simulator must be running)
+# Integration tests (requires simulator/emulator)
 flutter test integration_test
+
+# View HTML coverage report
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html  # macOS – use xdg-open on Linux
 ```
+Coverage should remain **≥ 70 %**; the CI pipeline fails otherwise.
 
 ---
-## 📝 Key Decisions & Trade-offs
-* **BLoC vs Riverpod** – project uses BLoC for its explicit event→state flow. Riverpod is great, but BLoC better fits the observer pattern evaluation criteria.
-* **Sqflite** over Hive → relational schema & SQL indices for range queries (due-date).
-* **Factory helper** instead of `factory` constructor to keep `Task` entity pure and testable.
-* **Simple heuristic priority** vs ML – sufficient for demo, can evolve.
+## 🏗 Folder Structure (Clean Architecture)
+```
+lib/
+  core/            # DI, theme, database, error handling
+  features/
+    tasks/
+      application/ # SyncManager & other orchestrators
+      data/        # datasources, models, repositories impl.
+      domain/      # entities, enums, repositories contracts
+      presentation/# blocs, pages, widgets
+```
+For deeper reasoning see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ---
-## 📈 Future Improvements
-* ML-driven priority based on user completion patterns
-* Remote backend & conflict-free replicated data types (CRDT) for advanced sync
-* Better accessibility & localisation
-
----
-© 2025 Your Name – MIT licence
+## 📄 License
+MIT © 2025 Your Name

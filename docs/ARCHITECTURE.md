@@ -13,6 +13,15 @@ Dependencies point inwards only.
 * **TaskBloc** orchestrates CRUD & sync events
 * **ThemeCubit** toggles theme with persistence
 
+### Why BLoC instead of Riverpod?
+Riverpod is a great declarative dependency-injection/state solution and would work perfectly with this codebase. The choice to use **flutter_bloc** was made for these reasons:
+
+1. **Explicit event → state flow.** Reviewers can trace every use-case inside `TaskBloc` without needing to understand implicit provider wiring.
+2. **bloc_test utilities.** `bloc_test` lets us replay and assert full event sequences, which helps drive the >70 % coverage requirement.
+3. **Maturity in large teams.** Many enterprise Flutter teams standardise on BLoC because of its strict unidirectional data-flow and widespread tooling support.
+
+Swapping to Riverpod would largely affect only the presentation layer because the clean-architecture boundaries already decouple state management from domain/data code.
+
 ## Data Flow (Happy Path)
 1. `TaskListPage` dispatches `AddTaskEvent`
 2. `TaskBloc` calls `TaskRepository.addTask`
