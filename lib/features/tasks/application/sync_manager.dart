@@ -26,7 +26,6 @@ class SyncManager {
       switch (op.operation) {
         case SyncOperationType.create:
         case SyncOperationType.update:
-          // In real app, send to backend. Here, we just mark as synced.
           await _queue.removeById(op.id!);
           break;
         case SyncOperationType.delete:

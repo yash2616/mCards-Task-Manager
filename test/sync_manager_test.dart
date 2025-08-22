@@ -6,7 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:task/features/tasks/data/datasources/sync_queue_datasource.dart';
 import 'package:task/features/tasks/data/models/sync_operation_model.dart';
 import 'package:task/features/tasks/domain/enums/sync_operation_type.dart';
-import 'package:task/features/tasks/sync/sync_manager.dart';
+import 'package:task/features/tasks/application/sync_manager.dart';
 
 class _MockQueue extends Mock implements SyncQueueDataSource {}
 

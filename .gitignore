@@ -22,3 +22,5 @@ macos/Flutter/ephemeral/
 macos/Pods/
 # Unit test goldens
 goldens/
+# Cursor rules
+CURSOR_RULES.md
